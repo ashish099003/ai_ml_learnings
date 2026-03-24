@@ -82,6 +82,22 @@ def nn_using_tf():
   final_loss = mse_loss(y_pred_final, Y_tf).numpy()
   print("\nFinal MSE on training set:", final_loss)
 
+
+  # Print learned linear approximation for sanity (since target is linear)
+  # Note: The small hidden net should be able to represent a linear mapping approx.
+  # We can run a simple least-square on predictions to see approximate slope/intercept.
+  coef = np.polyfit(X.flatten(), y_pred_final.numpy().flatten(), 1)
+  print(f"Learned linear fit (approx): y = {coef[0]:.3f}x + {coef[1]:.3f}")
+  print(f"True function was y = {true_w}x + {true_b}")
+
+  # -----------------------
+  # 8) Inference example: predict on a new point
+  # -----------------------
+  x_test = tf.constant([[0.5]], dtype=tf.float32)
+  y_test_pred = forward_pass(x_test).numpy().squeeze()
+  y_test_true = true_w * 0.5 + true_b
+  print(f"\nFor x = 0.5, predicted y = {y_test_pred:.3f}, true y = {y_test_true:.3f}")
+
 def basics():
 
  sample_tensor = tf.constant([[1, 2, 3], [4, 5, 6]], dtype=tf.float32)
